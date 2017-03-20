@@ -1,0 +1,114 @@
+#map {
+  height: 100%;
+}
+#container{
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+padding-top: 9px;
+}
+#sidebar, #sidebar2 {
+  height: 100%;
+  -webkit-transition: all 0.25s ease-out;
+  -moz-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out;
+}
+.navbar-brand {
+    padding: 8px 15px;
+    line-height: 20px;
+}
+
+/* css to customize Leaflet default styles  */
+.leaflet-label-TND .leaflet-popup-tip,
+.leaflet-label-TND .leaflet-popup-content-wrapper {
+    background: #fdae61;
+    color: #ffffff;
+    z-index:1001;
+    font-weight: bold;
+    text-align: center;
+}
+.leaflet-label-TND2 .leaflet-popup-tip,
+.leaflet-label-TND2 .leaflet-popup-content-wrapper {
+    background: #8dc63f;
+    color: #ffffff;
+    z-index:1001;
+    font-weight: bold;
+    text-align: center;
+}
+.leaflet-label-TND3 .leaflet-popup-tip,
+.leaflet-label-TND3 .leaflet-popup-content-wrapper {
+    background: #008192;
+    color: #ffffff;
+    z-index:1001;
+    font-weight: bold;
+    text-align: center;
+}
+.leaflet-label-TND4 .leaflet-popup-tip,
+.leaflet-label-TND4 .leaflet-popup-content-wrapper {
+    background: #fdae61;
+    color: #ffffff;
+    z-index:1001;
+    font-weight: bold;
+    text-align: center;
+}
+.map-legend {
+    padding: 0px 0px;
+    line-height: 1;
+    border: 1px solid #fff;
+    outline: none;
+    background-color: #fff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    width: 345px;
+    padding-right: 1px;
+}
+.map-legend p {
+    margin: 5px 10px 0 5px;
+}
+#legend-content {
+    margin:0 -5px;
+}
+#legend-definition {
+    float: right;
+    color: #848181;
+    cursor:pointer; 
+}
+#legend-icon {
+    line-height: 27px;
+    padding-left: 5px;
+    cursor: pointer;
+    color: #6689BC;
+    font-weight: 600;
+}
+#legend-icon:hover {
+    color: #3071a9;
+}
+.legend-top {
+    border-bottom: 1px solid #C3C2C2;
+    margin-top: -27px;
+    padding-bottom: 7px;
+    padding-left: 20px;
+}
+.legend-body { 
+    padding-top: 7px;
+    font-size:.9em
+}
+.legend-bottom {
+    height: 5px;
+}
+.ct-existing {
+    color:#8dc63f;
+    font-size: 25px;
+    vertical-align: middle;
+}
+.ct-inprogress{
+  color:#fdae61;
+  font-size: 25px;
+  vertical-align: middle;
+}
+.ct-planned{
+  color:#008192;
+  font-size: 25px;
+  vertical-align: middle;
+}
