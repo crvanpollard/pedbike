@@ -50,7 +50,36 @@ padding-top: 9px;
     z-index:1001;
     font-weight: bold;
     text-align: center;
-}
+    }
+ .legend {
+    background-color: #fff;
+    border-radius: 3px;
+    bottom: 0px;
+    right: 0px;
+    width: 170px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    padding: 10px;
+    position: absolute;
+    z-index: 99;
+    opacity: .95;
+    }
+    .legend h4 {
+    margin: 0 0 10px;
+    }
+    .legend div span {
+    border-radius: 50%;
+    display: inline-block;
+    height: 10px;
+    margin-right: 5px;
+    width: 10px;
+    }
+    .legend div span2 {
+    display: inline-block;
+    height: 5px;
+    margin-right: 5px;
+    width: 40px;
+    }
 .map-legend {
     padding: 0px 0px;
     line-height: 1;
@@ -111,4 +140,15 @@ padding-top: 9px;
   color:#008192;
   font-size: 25px;
   vertical-align: middle;
+}
+.lead{
+    font-size:35px;
+}
+.btn-primary:active, .btn-primary:focus, .btn-primary:hover {
+    color: #fff !important;
+    background-color: #00728b !important;
+    border-color: #00728b !important;
+}
+#myTab {
+    display: none;
 }
