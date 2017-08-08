@@ -266,7 +266,8 @@
                                                                //     feature.attributes.AADB > 151 ? 9 : feature.attributes.AADB > 47 ? 7 : feature.attributes.AADB > -5 ? 5 : 3) :
                                         r.relatedRecords[i].VOLUMESTR = formatNumber(parseInt(r.relatedRecords[i].TOTALVOL))
                                         r.relatedRecords[i].DAY = ['SUN','MON','TUE','WED','THU','FRI','SAT'][dt.getDay()]
-                                        r.relatedRecords[i].DATE = [dt.getMonth() + 1, dt.getDate(), dt.getYear() + 1900].join('/')
+                                      //  r.relatedRecords[i].DATE = [dt.getMonth() + 1, dt.getDate(), dt.getYear() + 1900].join('/')
+                                        r.relatedRecords[i].DATE = [dt.getMonth() + 1, dt.getDate()].join('/')
                                         r.relatedRecords[i].DATERANGE = [dt.getMonth()+ 1,dt.getYear()+ 1900].join('/')
                                     })
                                     matches[r.objectId].feature.properties.DETAILS = r.relatedRecords
