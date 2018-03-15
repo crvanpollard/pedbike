@@ -77,7 +77,7 @@
         }
         #results {
             transition: 1s max-height;
-            max-height: 700px; 
+            max-height: 900px; 
             overflow: hidden;
             height: 100%
         }
@@ -340,29 +340,27 @@
         
                     <div class="table-responsive">
                         <table class="table table-condensed" >
-                            <tbody >
-                               <tr>
+                            <tbody>
+                                 <tr>
                                     {{#DETAILS}}
                                     <td style="vertical-align:bottom;text-align:center;height: 100px;">
                                          <b>{{VOLUMESTR}}</b>
                                         <div style="vertical-align:bottom;height:{{PERCENT}}px;"><div style="background:{{COLOR}}; margin: 0 auto; width:20px; height:100%;"></div></div>
-                                        {{DAY}}<br/>{{DATE}}<br/><span style="color:grey">{{HIGHTEMP}}&deg;/ {{LOWTEMP}}&deg;<br/><i class="wi wi-{{WEATHER}}"></i></span></td>
+                                        {{DAY}}<br/>{{DATE}}<br/><span style="">{{HIGHTEMP}}&deg;/ {{LOWTEMP}}&deg;<br/><i class="wi wi-{{WEATHER}}"></i></span></td>
                                     {{/DETAILS}}
                                 </tr>
-                               
                             </tbody>
                             <tfoot>
-                               
-                             
-                                <tr><th colspan="12" style="text-align:left;">Total {{TYPE2}} Counts: {{TOTALCOUNT}}</th></tr>
+                                <tr><th colspan="12" style="text-align:right">Total {{TYPE2}} Counts: {{TOTALCOUNT}}</th></tr>
                             </tfoot>
                         </table>
                     </div>
                 
-               
-                    <div style="height:180px;margin: 0px 0px 10px 10px;padding:15px;background: url(https://maps.googleapis.com/maps/api/streetview?key=AIzaSyAvK54P-Pb3skEYDLFVoRnSTLtRyG5GJ6U&size=800x170&location={{LATITUDE}},{{LONGITUDE}}&heading={{HEADING}}) no-repeat; background-size: cover; position:relative;">
-                    
+                 
+                    <div class="col-sm-12" id="GSTV" style="height:200px;margin: 0px 0px 10px 10px;padding:15px;background: url(https://maps.googleapis.com/maps/api/streetview?key=AIzaSyAvK54P-Pb3skEYDLFVoRnSTLtRyG5GJ6U&size={{GSTVWIDTH}}x200&location={{LATITUDE}},{{LONGITUDE}}&heading={{HEADING}}) no-repeat;">
                     </div>
+                  
+
                 </div>
                 {{/result}}
             </div>

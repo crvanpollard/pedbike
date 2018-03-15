@@ -1,5 +1,5 @@
  $(function() {
-                $('#aboutModal').modal('show');
+               // $('#aboutModal').modal('show');
                 
                 window.map = L.map('map', {
                     center: [39.952473, -75.164106],
@@ -231,6 +231,7 @@
 
 
                 map.data = L.featureGroup().bindTooltip(function (layer) { return layer.feature.properties.ROAD }, {direction: 'top'}).on('click', function (e) {
+
                     var matches = {},
                         result = [],
                         objectids = []
@@ -246,6 +247,7 @@
                     })
 
                     if (objectids.length) {
+
                         $('#results').empty()
                         $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=bike', function (d, textStatus) {
                             $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=ped', function (d2, textStatus) {
@@ -266,7 +268,7 @@
                                                                //     feature.attributes.AADB > 151 ? 9 : feature.attributes.AADB > 47 ? 7 : feature.attributes.AADB > -5 ? 5 : 3) :
                                         r.relatedRecords[i].VOLUMESTR = formatNumber(parseInt(r.relatedRecords[i].TOTALVOL))
                                         r.relatedRecords[i].DAY = ['SUN','MON','TUE','WED','THU','FRI','SAT'][dt.getDay()]
-                                      //  r.relatedRecords[i].DATE = [dt.getMonth() + 1, dt.getDate(), dt.getYear() + 1900].join('/')
+                                    //  r.relatedRecords[i].DATE = [dt.getMonth() + 1, dt.getDate(), dt.getYear() + 1900].join('/')
                                         r.relatedRecords[i].DATE = [dt.getMonth() + 1, dt.getDate()].join('/')
                                         r.relatedRecords[i].DATERANGE = [dt.getMonth()+ 1,dt.getYear()+ 1900].join('/')
                                     })
@@ -295,6 +297,7 @@
                                 this.feature.properties.TEXTCOLOR =  this.feature.properties.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
                                 this.feature.properties.MONTH = monthString
                                 this.feature.properties.ICONSTYLE = (this.feature.properties.TYPE.match(/^Bicycle/) ? '0px': '10px')
+                                this.feature.properties.GSTVWIDTH = (this.feature.properties.TYPE.match(/^Bicycle/) ? '540': '540')
                                 result.push(this.feature.properties)
                             })
                             var sorted = result.sort(function (a,b) { return new Date(b.SETDATE).getTime() - new Date(a.SETDATE).getTime() }),
@@ -305,7 +308,11 @@
                                 this.firstChild = function() { return this.index === 1 ? 'active' : ''}
                             })
                             showResults({result: sorted})
-                          //  console.log(sorted[0].DETAILS)
+                        
+                       //   console.log(sorted[0].DETAILS)
+                        var mapWidth = ($('#GSTV').width());
+                          console.log(mapWidth)
+                        
                         })})
                     }
                 }).addTo(map)
