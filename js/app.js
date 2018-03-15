@@ -1,5 +1,5 @@
  $(function() {
-               // $('#aboutModal').modal('show');
+                $('#aboutModal').modal('show');
                 
                 window.map = L.map('map', {
                     center: [39.952473, -75.164106],
@@ -23,11 +23,9 @@
         //        map.addControl(new ResultsControl())
 
                 // Basemap Layers
-                var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-                    subdomains: 'abcd',
-                    maxZoom: 19
-                });
+                var CartoDB_Positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+        maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+      });
                 map.addLayer(CartoDB_Positron);
 
             // Add Circuit
@@ -47,7 +45,7 @@
                      layer.bindPopup(feature.properties.NAME,mycolor);
                     },
                 });
-                $.getJSON("http://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/c830cdb70f654c36bfd88eb7ed4bc424_0.geojson", function(data) {
+                $.getJSON("https://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/c830cdb70f654c36bfd88eb7ed4bc424_0.geojson", function(data) {
                     circuit.addData(data);
                 });
 
@@ -88,27 +86,27 @@
                  layer.bindPopup(link, {className:'leaflet-label-TND'});
                     },
                 });
-                $.getJSON("http://www.dvrpc.org/webmaps/permbikeped/data/data.aspx", function (data) {
+                $.getJSON("https://www.dvrpc.org/webmaps/permbikeped/data/data.aspx", function (data) {
                     PC.addData(data);
                 });
 
                 // Add Manual Counts
              //   color = feature.properties.TYPE.match(/^Bicycle 2/) ? '#2e5c95' : '#d4007e'
 
-                function style(feature) {
+                function style_man(feature) {
                     return {
                       //  "color": "#d53e4f",
-                      "color": feature.properties.TYPE.match(/^Bicycle 2/) ? '#2e5c95' : '#d4007e',
-                        "radius": feature.properties.TYPE.match(/^Bicycle 2/) ? '15' : '6',
+                      "color": feature.properties.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e',
+                        "radius": feature.properties.TYPE.match(/^Bicycle/) ? '6' : '8',
                         "weight": 0,
                         "opacity": 1,
-                        "fillOpacity": feature.properties.TYPE.match(/^Bicycle 2/) ? '1' : '.25',
+                        "fillOpacity": feature.properties.TYPE.match(/^Bicycle 2/) ? '.8' : '.8',
                     };
                 }        
                 
                 var man = L.geoJson(null, { 
                     pointToLayer: function(feature, latlng) {
-                    return L.circleMarker(latlng, style(feature));
+                    return L.circleMarker(latlng, style_man(feature));
                 },
                  onEachFeature: function(feature, layer) {
                       layer.on({
@@ -138,14 +136,14 @@
                 populationLegend.onAdd = function (map) {
                 var div = L.DomUtil.create('div', 'info legend');
              //    color = feature.attributes.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
-                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div><div><b>The Circuit</b></div><div><span2 style="background-color:#8dc63f"></span2>Existing</div><div><span2 style="background-color:#fdae61"></span2>In Progress</div><div><span2 style="background-color:#008192"></span2>Planned</div>';
+                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span id="pedicon" style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div><div><b>The Circuit</b></div><div><span2 style="background-color:#8dc63f"></span2>Existing</div><div><span2 style="background-color:#fdae61"></span2>In Progress</div><div><span2 style="background-color:#008192"></span2>Planned</div>';
                 return div;
                 };
 
                 populationChangeLegend.onAdd = function (map) {
                 var div = L.DomUtil.create('div', 'info legend');
              //    color = feature.attributes.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
-                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div>';
+                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span id="pedicon" style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div>';
                 return div;
                 };
 
@@ -249,8 +247,8 @@
                     if (objectids.length) {
 
                         $('#results').empty()
-                        $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=bike', function (d, textStatus) {
-                            $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=ped', function (d2, textStatus) {
+                        $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=bike', function (d, textStatus) {
+                            $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=ped', function (d2, textStatus) {
                                 d.relatedRecordGroups.concat(d2.relatedRecordGroups).forEach(function (r) {
                                     var total = 0,
                                         arr = r.relatedRecords.map(function (day) {
@@ -317,21 +315,21 @@
                     }
                 }).addTo(map)
 
-               var peddata = $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=bike', parseData)
-               var bikedata = $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=ped', parseData)
+               var peddata = $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=bike', parseData)
+               var bikedata = $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=ped', parseData)
 
                 $(document).on('click', '#zoomToRegion', function (e) {
                     map.fitBounds(map.data.getBounds())
                     e.preventDefault()
                 }).on('submit', '#searchForm', function (e) {
                     e.preventDefault()
-                    $.getJSON('http://open.mapquestapi.com/geocoding/v1/address?key=Fmjtd%7Cluu82q0rnu%2C22%3Do5-94yx5f&maxResults=1&location=' + $('#searchBox').val() + '&boundingBox=' + [map.data.getBounds().getNorthWest().lat, map.data.getBounds().getNorthWest().lng, map.data.getBounds().getSouthEast().lat, map.data.getBounds().getSouthEast().lng].join(',') + '&callback=?', function (d) {
+                    $.getJSON('https://open.mapquestapi.com/geocoding/v1/address?key=Fmjtd%7Cluu82q0rnu%2C22%3Do5-94yx5f&maxResults=1&location=' + $('#searchBox').val() + '&boundingBox=' + [map.data.getBounds().getNorthWest().lat, map.data.getBounds().getNorthWest().lng, map.data.getBounds().getSouthEast().lat, map.data.getBounds().getSouthEast().lng].join(',') + '&callback=?', function (d) {
                      //   console.log(d.results[0].locations[0].latLng)
                         map.setView(d.results[0].locations[0].latLng, 13)
                     })
                 }).on('click', '#streetViewBtn', function(e) {
                     e.preventDefault()
-                    window.open('http://maps.google.com/maps?layer=c&cbll=' + $(this).data('location') + '&cbp=12,' + $(this).data('heading') + ',0,0,5')
+                    window.open('https://maps.google.com/maps?layer=c&cbll=' + $(this).data('location') + '&cbp=12,' + $(this).data('heading') + ',0,0,5')
                 }).on('click', '#zoomToBtn', function(e) {
                     e.preventDefault()
                     map.setView($(this).data('location').split(','), 18)
@@ -353,11 +351,12 @@
                         (feature.attributes.AADP > 1828 ? 9 : feature.attributes.AADP > 718 ? 7 : feature.attributes.AADP > 271 ? 5 : 3),
             //crp        color = feature.attributes.TYPE.match(/^Bicycle/) ? '#FF8800' : '#C500FF'
                     color = feature.attributes.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
+                    size = feature.attributes.TYPE.match(/^Bicycle/) ? '6' : '8'
                 return {
                     stroke: false,
                     fillColor: color,
                //     radius: scale + 2,
-                    radius: 6,
+                    radius: size,
                     fillOpacity: 0.8
                 }
             }
@@ -390,7 +389,7 @@
                 $('#myTab a[href="#layers"]').tab('show');     
                 var html = Mustache.render($('#resultsTmpl').html(), obj),
                 res_counts = obj.result.length;
-            //  console.log(res_counts)
+              console.log(res_counts)
                
                 $('#results').append(html);
                 //bootstrap pagination

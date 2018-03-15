@@ -10,9 +10,9 @@
         <meta name="author" content="DVRPC">
         <title>DVRPC Pedestrian and Bicycle Counts</title>
             <!-- Core CSS -->
-        <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css">
-        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css">
+        <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="css/app.css">
 
         <!-- Load Leaflet from CDN-->
@@ -22,24 +22,24 @@
  *  Weather Icons 1.2
  *  Weather themed icons for Bootstrap
  *  ------------------------------------------------------------------------------
-* Maintained at http://erikflowers.github.io/weather-icons
- *  http://twitter.com/Erik_UX
+* Maintained at https://erikflowers.github.io/weather-icons
+ *  https://twitter.com/Erik_UX
  *
  *  License
  *  ------------------------------------------------------------------------------
  *  - Fpmt licensed under SIL OFL 1.1 -
- *    http://scripts.sil.org/OFL
+ *    https://scripts.sil.org/OFL
  *  - CSS and LESS are licensed under MIT License -
- *    http://opensource.org/licenses/mit-license.html
+ *    https://opensource.org/licenses/mit-license.html
  *  - Documentation licensed under CC BY 3.0 -
- *    http://creativecommons.org/licenses/by/3.0/
+ *    https://creativecommons.org/licenses/by/3.0/
  *  - Inspired by and works great as a companion with Font Awesome
- *    "Font Awesome by Dave Gandy - http://fontawesome.io"
+ *    "Font Awesome by Dave Gandy - https://fontawesome.io"
  *
  *  Weather Icons Bootstrap Package Author - Erik Flowers - erik@helloerik.com
  *  ------------------------------------------------------------------------------
  *  Email: erik@helloerik.com
- *  Twitter: http://twitter.com/Erik_UX
+ *  Twitter: https://twitter.com/Erik_UX
  */@font-face{font-family:weathericons;src:url(fonts/weathericons-regular-webfont.eot);src:url(fonts/weathericons-regular-webfont.eot?#iefix) format('embedded-opentype'),url(fonts/weathericons-regular-webfont.ttf) format('truetype'),url(fonts/weathericons-regular-webfont.svg#weathericons-regular-webfontRg) format('svg');font-weight:400;font-style:normal}.wi{display:inline-block;font-family:weathericons;font-style:normal;font-weight:400;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
             
         html, body {
@@ -117,7 +117,7 @@
 
                 <div class="navbar-brand">
                     <span>
-                    <a href="http://www.dvrpc.org" target="_blank"><img src="img/pb_dvrpc.png" alt="DVRPC logo"/></a>
+                    <a href="//www.dvrpc.org" target="_blank"><img src="img/pb_dvrpc.png" alt="DVRPC logo"/></a>
                     <img src="img/divider.png" alt=""/>
                     <img src="img/pb_logo.png" alt=""/>
                     <img src="img/pb_text.png" alt="DVRPC Travel Monitoring, Counting a Region in Motion"/>
@@ -132,6 +132,10 @@
                     <button type="button" style=" margin:10px 10px 0px 4px;float:right;color:#2e5c95;background-color:#d9dadc;" class="btn btn-sm"<a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="$('#howModal').modal('show'); return false;"><i class="icon-question-sign" style="color:#2e5c95"></i>&nbsp;&nbsp;<b>How to Use</b></a></button>
                     -->
                     <button type="button" style=" margin:10px 10px 0px 4px;float:right;color:#2e5c95;background-color:#d9dadc;" class="btn btn-sm"<a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="$('#aboutModal').modal('show'); return false;"><i class="icon-info-sign" style="color:#2e5c95"></i>&nbsp;&nbsp;<b>About</b></a></button>
+                   
+                    <button type="button" style=" margin:10px 10px 0px 4px;float:right;" class="btn btn-sm btn-success"<a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="window.open('https://docs.google.com/forms/d/1P3g4u-seWj1qGg1kUpJomdSYbePCH31ygThd3TCOpeg/viewform?edit_requested=true'); return false;"><i class="icon-pencil" ></i>&nbsp;&nbsp;<b>Take the Survey</b></a></button>
+
+                  
                     </ul>
                 </div>
             </div>
@@ -212,7 +216,7 @@
         </div><!-- /.modal -->  
 
         <div class="modal fade" id="aboutModal">
-                <div class="modal-dialog"style="width:620px">
+                <div class="modal-dialog"style="width:650px">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -225,7 +229,13 @@
                                 <li><a href="#disclaimer" data-toggle="tab"><i class="icon-exclamation-sign"></i>&nbsp;Disclaimer</a></li>
                             </ul>
                             <div id="aboutTabsContent" class="tab-content" style="padding-top: 10px;">
-                                <div class="tab-pane fade active in" id="about">
+                                <div class="tab-pane fade active in" id="about" >
+                                    DVRPC is conducting a survey to understand who is using our Pedestrian and Bicycle Count Viewer and why. Please share your experience with us so we can better serve our users.
+                                     <!-- Survey Button -->
+                                    <div class="text-center" style="margin:10px;">
+                                    <a href="https://docs.google.com/forms/d/1P3g4u-seWj1qGg1kUpJomdSYbePCH31ygThd3TCOpeg/viewform?edit_requested=true" class="btn btn-success" role="button" aria-disabled="true" target="_new"><i class="icon-pencil" style="color:#fff"></i>&nbsp;&nbsp;Take the Survey</a>&nbsp;&nbsp;
+                                    </div>
+                                <hr>
                                      <div>Pedestrian and Bicycle count data on this website is provided as a public service. This map displays count data within and surrounding the DVRPC region. Review detailed hourly reports, location information and ADB/ADP (an estimate of traffic during a 24-hour period).</div> 
                                      <br>
                                     <div><img style="margin:-5px 25px 0px 20px;float:left;" src="img/ped_icon.png" alt=""/>The data item <b>"Annual Daily Pedestrian (ADP)"</b> represents an estimate of all pedestrian traffic during a <i class="glyphicon glyphicon-time" aria-hidden="true"></i> 24-hour period at the location indicated for the year in which it was collected.
@@ -277,10 +287,10 @@
                             <div class="row">
                                 <div class="col-xs-8">
                                     <b>Download Data - </b> Directly download the Pedestrian and Bicycle Counts from the links below.<br><br>
-                                    - Pedestrian Counts: <a href="http://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/d2599ca2c6834fb0a858507e2d7897ea_0" target="_new">http://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/d2599ca2c6834fb0a858507e2d7897ea_0</a>
+                                    - Pedestrian Counts: <a href="https://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/d2599ca2c6834fb0a858507e2d7897ea_0" target="_new">https://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/d2599ca2c6834fb0a858507e2d7897ea_0</a>
                                     <br>
                                     <br>
-                                     - Bicycle Counts: <a href="http://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/f8cf3245754c4b79a89a04a5d278a450_0" target="_new">http://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/f8cf3245754c4b79a89a04a5d278a450_0</a>
+                                     - Bicycle Counts: <a href="https://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/f8cf3245754c4b79a89a04a5d278a450_0" target="_new">https://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/f8cf3245754c4b79a89a04a5d278a450_0</a>
                                 </div>
                                 <div class="col-xs-4 text-right"><img src="img/ags_connect.png" alt=""></div>
                             </div>
@@ -288,10 +298,10 @@
                             <div class="row">
                                 <div class="col-xs-8">
                                     <b>ArcGIS for Desktop - </b> Copy and paste the URL below to access our ArcGIS Server map services.
-                                    <pre data-initialized="true"><code>http://arcgis.dvrpc.org/arcgis/rest/services</code></pre>
+                                    <pre data-initialized="true"><code>https://arcgis.dvrpc.org/arcgis/rest/services</code></pre>
                                     - The Pedestrian and Bicycle Counts Map and Feature Services are located within the 'Transportaion' folder.
                                 </div>
-                                <div class="col-xs-4 text-right"><img src="http://www.dvrpc.org/webmaps/img/dataportal/Transportation_service.png" alt=""></div>
+                                <div class="col-xs-4 text-right"><img src="//www.dvrpc.org/webmaps/img/dataportal/Transportation_service.png" alt=""></div>
                             </div>
                         </div>
                     </div><!-- /.modal-body -->
@@ -329,7 +339,7 @@
                     </div>
 
                      <div class="col-sm-10" style="margin-bottom:15px;padding-left:25px">
-                    <span class="lead">{{AADX}}</span> Annual Average Daily {{TYPE2}}s <br>
+                    <span class="lead" style="font-style:bold;">{{AADX}}</span> Annual Average Daily {{TYPE2}}s <br>
                     {{ROAD}}  <small> From {{FROMLMT}} to {{TOLMT}}  </small> 
                     <div class="form-group" style="margin-top:5px;"><a href="#" id="zoomToBtn" class="btn btn-default btn-xs" data-location="{{LATITUDE}},{{LONGITUDE}}">zoom to location</a></div>
 
@@ -351,7 +361,7 @@
                                 </tr>
                             </tbody>
                             <tfoot>
-                                <tr><th colspan="12" style="text-align:right">Total {{TYPE2}} Counts: {{TOTALCOUNT}}</th></tr>
+                                <tr><th colspan="12" style="text-align:right">Total Number of {{TYPE2}} Counted: {{TOTALCOUNT}}</th></tr>
                             </tfoot>
                         </table>
                     </div>

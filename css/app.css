@@ -74,6 +74,11 @@ padding-top: 9px;
     margin-right: 5px;
     width: 10px;
     }
+    #pedicon{
+       height: 13px;
+       width:13px; 
+       margin-left: -1px;
+    }
     .legend div span2 {
     display: inline-block;
     height: 5px;
