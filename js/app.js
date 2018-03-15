@@ -4,14 +4,12 @@
                 window.map = L.map('map', {
                     center: [39.952473, -75.164106],
                     zoom: 10
-                }).on('click', function (e) {
-                    e.originalEvent.target.nodeName === 'svg' && $('#results').html('<p>Click on markers on the map to view details for that location. Results will appear here.</p><p>Enter an address in the search bar above to zoom to that location.</p><p></p>')
                 })
                                 
                 var ZoomToRegionControl = L.Control.extend({
                     options: { position: 'topleft' },
                     onAdd: function (map) {
-                        return $(ich.zoomToRegionTmpl({}))[0]
+                        return $(Mustache.render($('#zoomToRegionTmpl').html(), {}))[0]
                     }
                 })
                 map.addControl(new ZoomToRegionControl())
@@ -25,28 +23,9 @@
         //        map.addControl(new ResultsControl())
 
                 // Basemap Layers
-                var Mapbox_dark = L.tileLayer.provider('MapBox.crvanpollard.hghkafl4')
-
-                var Stamen_Terrain = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.{ext}', {
-                attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                subdomains: 'abcd',
-                minZoom: 0,
-                maxZoom: 18,
-                ext: 'png'
-                });
-
-                var Mapbox_Imagery = L.tileLayer(
-                    'https://api.mapbox.com/styles/v1/crvanpollard/cimpi6q3l00geahm71yhzxjek/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY3J2YW5wb2xsYXJkIiwiYSI6Ii00ZklVS28ifQ.Ht4KwAM3ZUjo1dT2Erskgg', {
-                        tileSize: 512,
-                        zoomOffset: -1,
-                        attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    });
-
-                var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-                    subdomains: 'abcd',
-                    maxZoom: 19
-                });
+                var CartoDB_Positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+        maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+      });
                 map.addLayer(CartoDB_Positron);
 
             // Add Circuit
@@ -59,21 +38,14 @@
                     }
                     },
                     onEachFeature: function(feature, layer) {
-         //            var mycolor = feature.properties.CIRCUIT; 
-         //       if (mycolor==='Existing'){
-         //           return  {className:'leaflet-label-TND'};
-         //        }else if(mycolor==='In Progress'){
-         //           return  {className:'leaflet-label-TND2'};
-         //       }
-
-                if (feature.properties.CIRCUIT==='Existing'){ var mycolor = {className:'leaflet-label-TND2'};}
-                else if (feature.properties.CIRCUIT==='Planned'){ var mycolor = {className:'leaflet-label-TND3'};}
-                else { var mycolor = {className:'leaflet-label-TND4'};}
+                    if (feature.properties.CIRCUIT==='Existing'){ var mycolor = {className:'leaflet-label-TND2'};}
+                    else if (feature.properties.CIRCUIT==='Planned'){ var mycolor = {className:'leaflet-label-TND3'};}
+                    else { var mycolor = {className:'leaflet-label-TND4'};}
 
                      layer.bindPopup(feature.properties.NAME,mycolor);
                     },
                 });
-                $.getJSON("http://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/c830cdb70f654c36bfd88eb7ed4bc424_0.geojson", function(data) {
+                $.getJSON("https://dvrpc-dvrpcgis.opendata.arcgis.com/datasets/c830cdb70f654c36bfd88eb7ed4bc424_0.geojson", function(data) {
                     circuit.addData(data);
                 });
 
@@ -86,11 +58,11 @@
                 });
                 DVRPC.addTo(map);
 
-                var TNDIcon = L.icon({
+                var PCIcon = L.icon({
                             iconUrl: 'img/pc_marker.png',
                             iconSize: [20, 33]
-                      //      iconAnchor: [15, 15]
-                          //  popupAnchor: [0, 15]
+                      //    iconAnchor: [15, 15]
+                      //    popupAnchor: [0, 15]
                     });
 
             // Add Perm Counter
@@ -107,20 +79,48 @@
                 
                 var PC = L.geoJson(null, { 
                     pointToLayer: function(feature, latlng) {
-                    return L.marker(latlng, {icon: TNDIcon, riseOnHover: true});
+                    return L.marker(latlng, {icon: PCIcon, riseOnHover: true});
                 },
                  onEachFeature: function(feature, layer) {
                 var link =  (feature.properties.LOCATIONNAME) + "<br><a href='http://www.dvrpc.org/webmaps/PermBikePed/' target='_new'>View Counter Data</a>" ;
                  layer.bindPopup(link, {className:'leaflet-label-TND'});
                     },
                 });
-                $.getJSON("http://www.dvrpc.org/webmaps/permbikeped/data/data.aspx", function (data) {
+                $.getJSON("https://www.dvrpc.org/webmaps/permbikeped/data/data.aspx", function (data) {
                     PC.addData(data);
                 });
 
+                // Add Manual Counts
+             //   color = feature.properties.TYPE.match(/^Bicycle 2/) ? '#2e5c95' : '#d4007e'
+
+                function style_man(feature) {
+                    return {
+                      //  "color": "#d53e4f",
+                      "color": feature.properties.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e',
+                        "radius": feature.properties.TYPE.match(/^Bicycle/) ? '6' : '8',
+                        "weight": 0,
+                        "opacity": 1,
+                        "fillOpacity": feature.properties.TYPE.match(/^Bicycle 2/) ? '.8' : '.8',
+                    };
+                }        
+                
+                var man = L.geoJson(null, { 
+                    pointToLayer: function(feature, latlng) {
+                    return L.circleMarker(latlng, style_man(feature));
+                },
+                 onEachFeature: function(feature, layer) {
+                      layer.on({
+                        click: tboro
+                        });
+                    },
+                });
+                $.getJSON("data/man.js", function (data) {
+                    man.addData(data);
+                });
+                man.addTo(map).bindTooltip('South St Boardwalk', {direction: 'top'});
+
                 var baseLayers = {
-                    "Grayscale": CartoDB_Positron,
-                    "Terrian": Stamen_Terrain
+                    "Grayscale": CartoDB_Positron
                 };
 
                 var overlays = {
@@ -134,38 +134,21 @@
                 var populationChangeLegend = L.control({position: 'bottomright'});
 
                 populationLegend.onAdd = function (map) {
-                var legendDiv = L.DomUtil.create('div', 'map-legend legend-control leaflet-bar');
-
-              //  legendDiv.innerHTML += '<div id="legend-icon" title="Toggle Legend"><i class="glyphicon glyphicon-minus"></i><span class="legend-label" style="display:none;">&nbsp;&nbsp;Legend</span></div>';
-
-               // var legend_top = L.DomUtil.create('div', 'map-legend-items legend-top', legendDiv),
-                var legend_body = L.DomUtil.create('div', 'map-legend-items legend-body', legendDiv);
-               // legend_bottom = L.DomUtil.create('div', 'map-legend-items legend-bottom', legendDiv);
-
-                legend_body.innerHTML += '<div id="legend-content" class="row"><p>&nbsp;&nbsp;<b>The Circuit Trails</b><br><div class="col-xs-4"><i class="glyphicon glyphicon-minus ct-existing"></i>&nbsp;&nbsp;Existing</div><div class="col-xs-4"><i class="glyphicon glyphicon-minus ct-inprogress"></i>&nbsp;&nbsp;In Progress</div><div class="col-xs-4"><i class="glyphicon glyphicon-minus ct-planned"></i><span>&nbsp;&nbsp;Planned</span></div></div>';
-
-               // legend_top.innerHTML += '<p><b>The Circuit Trails</b>'
-
-              //  legendDiv.setAttribute('data-status', 'open');
-
-                return legendDiv;
-
-
-          //      var div = L.DomUtil.create('div', 'info legend');
-          //          div.innerHTML +=
-          //          '<img src="img/circuit.png" alt="legend" width="300" height="60">';
-          //      return div;
+                var div = L.DomUtil.create('div', 'info legend');
+             //    color = feature.attributes.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
+                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span id="pedicon" style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div><div><b>The Circuit</b></div><div><span2 style="background-color:#8dc63f"></span2>Existing</div><div><span2 style="background-color:#fdae61"></span2>In Progress</div><div><span2 style="background-color:#008192"></span2>Planned</div>';
+                return div;
                 };
 
                 populationChangeLegend.onAdd = function (map) {
                 var div = L.DomUtil.create('div', 'info legend');
-                    div.innerHTML +=
-                    '<img src="img/legend.png" alt="legend" width="0" height="0">';
+             //    color = feature.attributes.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
+                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span id="pedicon" style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div>';
                 return div;
                 };
 
                 // Add this one (only) for now, as the Population layer is on by default
-                // populationLegend.addTo(map);
+                 populationChangeLegend.addTo(map);
 
                 map.on('overlayadd', function (eventLayer) {
                     // Switch to the Population legend...
@@ -178,12 +161,75 @@
                     // Switch to the Population legend...
                     if (eventLayer.name === 'The Circuit') {
                         this.removeControl(populationLegend);
-                       // populationLegend.addTo(this);
+                        populationChangeLegend.addTo(this);
                     }
                 });
 
-                /////FUNCTIONS      
+                /////FUNCTIONS 
+                function tboro(e) {        
+                //    $('#results').html('');
+                $('#myTab a[href="#Results"]').tab('show');
+                    var layer = e.target;
+                    var props = layer.feature.properties
+                    content = '<div style="text-align:center"><h3>Video Bicycle and Pedestrian 24-Hour Counts </h3>South St Boardwalk <small>From South St to Locust St </small></div>'
+                    +'<div><img style="margin:5px 25px 0px 20px;float:left;" src="img/bike_icon.png" alt=""/>'
+                    +'</div>'
+                    +  '<table class="table table-hover" style="width:90%;margin:0px 0px 0px 15px;">'
+                    +    '<thead>'
+                    +    '<tr>'
+                    +    '<th>Type</th>'
+                    +    '<th>Date</th>'
+                    +    '<th>DVRPC File #</th>'
+                    +    '</tr>'
+                    +    '</thead>'
+                    +    '<tbody>'
+                    +    '<tr>'
+                    +    '<td>Bicycle</td>'
+                    +    '<td>8/12/2016</td>'
+                    +    '<td><a href="http://www.dvrpc.org/asp/TrafficCountPDF/BikePed/129712.pdf" target="_blank" class="btn btn-primary btn-xs" style="margin-left:5px;">129712  <i class="glyphicon glyphicon-new-window"></i></a></td>'
+                    +    '</tr>'
+                    +    '<tr>'
+                    +    '<td>Bicycle</td>'
+                    +    '<td>10/21/2014</td>'
+                    +    '<td><a href="http://www.dvrpc.org/asp/TrafficCountPDF/BikePed/114831.pdf" target="_blank" class="btn btn-primary btn-xs" style="margin-left:5px;">114831 <i class="glyphicon glyphicon-new-window"></i></a></td>'
+                    +    '</tr>'
+                    +    '</tbody>'
+                    +    '</table>'
+                    +    '<div><img style="margin:5px 25px 0px 20px;float:left;" src="img/ped_icon.png" alt=""/>'
+                    +    '</div>'
+                    +    '<table class="table table-hover" style="width:90%;margin:0px 0px 0px 15px;">'
+                    +    '<thead>'
+                    +    '<tr>'
+                    +    '<th>Type</th>'
+                    +    '<th>Date</th>'
+                    +    '<th>DVRPC File #</th>'
+                    +    '</tr>'
+                    +    '</thead>'
+                    +    '<tbody>'
+                    +    '<tr>'
+                    +    '<td>Pedestrian</td>'
+                    +    '<td>8/12/2016</td>'
+                    +    '<td><a href="http://www.dvrpc.org/asp/TrafficCountPDF/BikePed/122082.pdf" target="_blank" class="btn btn-primary btn-xs" style="margin-left:5px;">122082 <i class="glyphicon glyphicon-new-window"></i></a></td>'
+                    +    '</tr>'
+                    +    '<tr>'
+                    +    '<td>Pedestrian</td>'
+                    +    '<td>8/11/2016</td>'
+                    +    '<td><a href="http://www.dvrpc.org/asp/TrafficCountPDF/BikePed/129713.pdf" target="_blank" class="btn btn-primary btn-xs" style="margin-left:5px;">129713  <i class="glyphicon glyphicon-new-window"></i></a></td>'
+                    +    '</tr>'
+                    +    '<tr>'
+                    +    '<td>Pedestrian</td>'
+                    +    '<td>10/21/2014</td>'
+                    +    '<td><a href="http://www.dvrpc.org/asp/TrafficCountPDF/BikePed/114832.pdf" target="_blank" class="btn btn-primary btn-xs" style="margin-left:5px;">114832 <i class="glyphicon glyphicon-new-window"></i></a></td>'
+                    +    '</tr>'
+                    +    '</tbody>'
+                    +    '</table>'
+                    ;
+                    document.getElementById('infosidebar').innerHTML = content;
+                };
+
+
                 map.data = L.featureGroup().bindTooltip(function (layer) { return layer.feature.properties.ROAD }, {direction: 'top'}).on('click', function (e) {
+
                     var matches = {},
                         result = [],
                         objectids = []
@@ -199,9 +245,10 @@
                     })
 
                     if (objectids.length) {
+
                         $('#results').empty()
-                        $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=bike', function (d, textStatus) {
-                            $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=ped', function (d2, textStatus) {
+                        $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=bike', function (d, textStatus) {
+                            $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?objectIds=' + objectids.join(',') + '&type=ped', function (d2, textStatus) {
                                 d.relatedRecordGroups.concat(d2.relatedRecordGroups).forEach(function (r) {
                                     var total = 0,
                                         arr = r.relatedRecords.map(function (day) {
@@ -215,10 +262,12 @@
                                         r.relatedRecords[i] = r.relatedRecords[i].attributes
                                         r.relatedRecords[i].PERCENT = parseInt(r.relatedRecords[i].TOTALVOL) / max * 100
                                         r.relatedRecords[i].COLOR = color
-                                        r.relatedRecords[i].PADDING = 100 - (parseInt(r.relatedRecords[i].TOTALVOL) / max * 100)
+                                        r.relatedRecords[i].PADDING = 100 - (parseInt(r.relatedRecords[i].TOTALVOL) / max * 100) > 50 ? 55 : 100 - (parseInt(r.relatedRecords[i].TOTALVOL) / max * 100)
+                                                               //     feature.attributes.AADB > 151 ? 9 : feature.attributes.AADB > 47 ? 7 : feature.attributes.AADB > -5 ? 5 : 3) :
                                         r.relatedRecords[i].VOLUMESTR = formatNumber(parseInt(r.relatedRecords[i].TOTALVOL))
                                         r.relatedRecords[i].DAY = ['SUN','MON','TUE','WED','THU','FRI','SAT'][dt.getDay()]
-                                        r.relatedRecords[i].DATE = [dt.getMonth() + 1, dt.getDate(), dt.getYear() + 1900].join('/')
+                                    //  r.relatedRecords[i].DATE = [dt.getMonth() + 1, dt.getDate(), dt.getYear() + 1900].join('/')
+                                        r.relatedRecords[i].DATE = [dt.getMonth() + 1, dt.getDate()].join('/')
                                         r.relatedRecords[i].DATERANGE = [dt.getMonth()+ 1,dt.getYear()+ 1900].join('/')
                                     })
                                     matches[r.objectId].feature.properties.DETAILS = r.relatedRecords
@@ -226,7 +275,9 @@
                                 })
                         
                             $.each(matches, function () {
-
+                                var d = (parseInt(this.feature.properties.SETDATE.split('/')[0]));
+                                var months = ['','January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December'];
+                                var monthString = months[d];
                             //    var sd = new daterange(this.feature.properties.TYPE)
                            //     this.feature.properties.TYPE = this.feature.properties.TYPE.split(' ')[0]
                                 this.feature.properties.ROAD = toTitleCase(this.feature.properties.ROAD)
@@ -238,31 +289,47 @@
                                 this.feature.properties.REPORT = this.feature.properties.TYPE.match(/^Bicycle 6/) ? 'http://www.dvrpc.org/asp/TrafficCountPDF/BikePed/'+ this.feature.properties.RECORDNUM+'.pdf' : this.feature.properties.TYPE.match(/^Pedestrian 2/) ? 'http://www.dvrpc.org/asp/TrafficCountPDF/BikePed/'+ this.feature.properties.RECORDNUM+'.pdf': 'http://www.dvrpc.org/asp/' + (this.feature.properties.TYPE.match(/^Bicycle/) ? 'bike' : 'pedestrian') + 'count/default.aspx?RECNUM=' + this.feature.properties.RECORDNUM
                                 this.feature.properties.DIR = this.feature.properties.CNTDIR || this.feature.properties.SIDEWALK || ""
                                 this.feature.properties.TYPE2 = (this.feature.properties.TYPE.match(/^Bicycle 6/) ? 'Bicycle': this.feature.properties.TYPE.match(/^Pedestrian 2/) ? 'Pedestrian' : this.feature.properties.TYPE.match(/^Bicycle/) ? 'Bicycle':'Pedestrian')
+                            //    this.feature.properties.TYPE2 = (this.feature.properties.TYPE.match(/^Bicycle 6/) ? 'B': this.feature.properties.TYPE.match(/^Pedestrian 2/) ? 'P' : this.feature.properties.TYPE.match(/^Bicycle/) ? 'B':'P')
+                                this.feature.properties.ICON = (this.feature.properties.TYPE.match(/^Bicycle/) ? 'img/bike_icon.png': 'img/ped_icon.png')
                                 this.feature.properties.HEADING = this.feature.properties.DIR.match(/^n/) ? 0 : this.feature.properties.DIR.match(/^e/) ? 90 : this.feature.properties.DIR.match(/^s/) ? 180 : 270
-                                this.feature.properties.index = result.length + 1
-                                this.feature.properties.firstChild = function() { return this.index === 1 ? 'active' : ''}
+                                this.feature.properties.TEXTCOLOR =  this.feature.properties.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
+                                this.feature.properties.MONTH = monthString
+                                this.feature.properties.ICONSTYLE = (this.feature.properties.TYPE.match(/^Bicycle/) ? '0px': '10px')
+                                this.feature.properties.GSTVWIDTH = (this.feature.properties.TYPE.match(/^Bicycle/) ? '540': '540')
                                 result.push(this.feature.properties)
                             })
-                            showResults({result: result})
+                            var sorted = result.sort(function (a,b) { return new Date(b.SETDATE).getTime() - new Date(a.SETDATE).getTime() }),
+                                count = 0
+
+                            $.each(sorted, function () {
+                                this.index = ++count
+                                this.firstChild = function() { return this.index === 1 ? 'active' : ''}
+                            })
+                            showResults({result: sorted})
+                        
+                       //   console.log(sorted[0].DETAILS)
+                        var mapWidth = ($('#GSTV').width());
+                          console.log(mapWidth)
+                        
                         })})
                     }
                 }).addTo(map)
 
-               var peddata = $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=bike', parseData)
-               var bikedata = $.getJSON('http://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=ped', parseData)
+               var peddata = $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=bike', parseData)
+               var bikedata = $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=ped', parseData)
 
                 $(document).on('click', '#zoomToRegion', function (e) {
                     map.fitBounds(map.data.getBounds())
                     e.preventDefault()
                 }).on('submit', '#searchForm', function (e) {
                     e.preventDefault()
-                    $.getJSON('http://open.mapquestapi.com/geocoding/v1/address?key=Fmjtd%7Cluu82q0rnu%2C22%3Do5-94yx5f&maxResults=1&location=' + $('#searchBox').val() + '&boundingBox=' + [map.data.getBounds().getNorthWest().lat, map.data.getBounds().getNorthWest().lng, map.data.getBounds().getSouthEast().lat, map.data.getBounds().getSouthEast().lng].join(',') + '&callback=?', function (d) {
+                    $.getJSON('https://open.mapquestapi.com/geocoding/v1/address?key=Fmjtd%7Cluu82q0rnu%2C22%3Do5-94yx5f&maxResults=1&location=' + $('#searchBox').val() + '&boundingBox=' + [map.data.getBounds().getNorthWest().lat, map.data.getBounds().getNorthWest().lng, map.data.getBounds().getSouthEast().lat, map.data.getBounds().getSouthEast().lng].join(',') + '&callback=?', function (d) {
                      //   console.log(d.results[0].locations[0].latLng)
                         map.setView(d.results[0].locations[0].latLng, 13)
                     })
                 }).on('click', '#streetViewBtn', function(e) {
                     e.preventDefault()
-                    window.open('http://maps.google.com/maps?layer=c&cbll=' + $(this).data('location') + '&cbp=12,' + $(this).data('heading') + ',0,0,5')
+                    window.open('https://maps.google.com/maps?layer=c&cbll=' + $(this).data('location') + '&cbp=12,' + $(this).data('heading') + ',0,0,5')
                 }).on('click', '#zoomToBtn', function(e) {
                     e.preventDefault()
                     map.setView($(this).data('location').split(','), 18)
@@ -280,16 +347,17 @@
             
             function symbolize(feature) {
                 var scale = feature.attributes.TYPE.match(/^Bicycle/) ?
-                        (feature.attributes.AADB > 151 ? 9 : feature.attributes.AADB > 47 ? 7 : feature.attributes.AADB > 12 ? 5 : 3) :
+                        (feature.attributes.AADB > 151 ? 9 : feature.attributes.AADB > 47 ? 7 : feature.attributes.AADB > -5 ? 5 : 3) :
                         (feature.attributes.AADP > 1828 ? 9 : feature.attributes.AADP > 718 ? 7 : feature.attributes.AADP > 271 ? 5 : 3),
             //crp        color = feature.attributes.TYPE.match(/^Bicycle/) ? '#FF8800' : '#C500FF'
                     color = feature.attributes.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
+                    size = feature.attributes.TYPE.match(/^Bicycle/) ? '6' : '8'
                 return {
                     stroke: false,
                     fillColor: color,
                //     radius: scale + 2,
-                    radius: 6,
-                    fillOpacity: 0.35
+                    radius: size,
+                    fillOpacity: 0.8
                 }
             }
             
@@ -316,14 +384,20 @@
             }
             
             function showResults(obj) {
-                var html = ich.resultsTmpl(obj),
-                    res_counts = obj.result.length;
+            //    console.log(obj.result.length)
+            //    $('#results').show();
+                $('#myTab a[href="#layers"]').tab('show');     
+                var html = Mustache.render($('#resultsTmpl').html(), obj),
+                res_counts = obj.result.length;
+              console.log(res_counts)
+               
                 $('#results').append(html);
                 //bootstrap pagination
                 var pager_options = {
                     currentPage: 1,
                     totalPages: res_counts,
                     bootstrapMajorVersion: 3,
+                    
                     pageUrl: function(type, page, current){
                     return "#rec-"+page;
                     },
@@ -335,4 +409,6 @@
                 $('#tab-navigation').bootstrapPaginator(pager_options);
                 $('.pagination li a').attr('data-toggle', 'tab');
                 $('.pagination').tab();
+
+                 document.getElementById('total').innerHTML = 'Total results returned: ' + res_counts.toString();
             }
