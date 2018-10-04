@@ -28,18 +28,20 @@
       });
                 map.addLayer(CartoDB_Positron);
 
-            // Add Circuit
+                // Add Circuit
                 var circuit = L.geoJson(null, {
                 style: function(feature) {
                     switch (feature.properties.CIRCUIT) {
                     case 'Existing': return {color: "#8dc63f", weight: 3, opacity: 1,};
                     case 'Planned':   return {color: "#008192", weight: 3,opacity: 1,};
+                    case 'Pipeline':   return {color: "#AF46A4", weight: 3,opacity: 1,};
                     case 'In Progress':   return {color: "#fdae61", weight: 3,opacity: 1,};
                     }
                     },
                     onEachFeature: function(feature, layer) {
                     if (feature.properties.CIRCUIT==='Existing'){ var mycolor = {className:'leaflet-label-TND2'};}
                     else if (feature.properties.CIRCUIT==='Planned'){ var mycolor = {className:'leaflet-label-TND3'};}
+                    else if (feature.properties.CIRCUIT==='Pipeline'){ var mycolor = {className:'leaflet-label-TND5'};}
                     else { var mycolor = {className:'leaflet-label-TND4'};}
 
                      layer.bindPopup(feature.properties.NAME,mycolor);

@@ -51,6 +51,14 @@ padding-top: 9px;
     font-weight: bold;
     text-align: center;
     }
+.leaflet-label-TND5 .leaflet-popup-tip,
+.leaflet-label-TND5 .leaflet-popup-content-wrapper {
+    background: #AF46A4;
+    color: #ffffff;
+    z-index:1001;
+    font-weight: bold;
+    text-align: center;
+    }   
  .legend {
     background-color: #fff;
     border-radius: 3px;
