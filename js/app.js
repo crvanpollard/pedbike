@@ -138,7 +138,7 @@
                 populationLegend.onAdd = function (map) {
                 var div = L.DomUtil.create('div', 'info legend');
              //    color = feature.attributes.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
-                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span id="pedicon" style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div><div><b>The Circuit</b></div><div><span2 style="background-color:#8dc63f"></span2>Existing</div><div><span2 style="background-color:#fdae61"></span2>In Progress</div><div><span2 style="background-color:#008192"></span2>Planned</div>';
+                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span id="pedicon" style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div><div><b>The Circuit</b></div><div><span2 style="background-color:#8dc63f"></span2>Existing</div><div><span2 style="background-color:#fdae61"></span2>In Progress</div><div><span2 style="background-color:#008192"></span2>Planned</div><div><span2 style="background-color:#AF46A4"></span2>Pipeline</div>';
                 return div;
                 };
 
