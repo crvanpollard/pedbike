@@ -24,8 +24,8 @@
 
                 // Basemap Layers
                 var CartoDB_Positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-                maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
-                });
+        maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+      });
                 map.addLayer(CartoDB_Positron);
 
                 // Add Circuit
@@ -102,7 +102,7 @@
                         "radius": feature.properties.TYPE.match(/^Bicycle/) ? '6' : '8',
                         "weight": 0,
                         "opacity": 1,
-                        "fillOpacity": feature.properties.TYPE.match(/^Bicycle 2/) ? '.8' : '.8',
+                        "fillOpacity": 0.8,
                     };
                 }        
                 
@@ -138,7 +138,7 @@
                 populationLegend.onAdd = function (map) {
                 var div = L.DomUtil.create('div', 'info legend');
              //    color = feature.attributes.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
-                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span id="pedicon" style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div><div><b>The Circuit</b></div><div><span2 style="background-color:#8dc63f"></span2>Existing</div><div><span2 style="background-color:#fdae61"></span2>In Progress</div><div><span2 style="background-color:#008192"></span2>Planned</div><div><span2 style="background-color:#AF46A4"></span2>Pipeline</div>';
+                    div.innerHTML +='<div style="margin-left: 15px;"><span style="background-color:#2e5c95;margin-right:25px;"></span>Bicycle Count</div><div style="margin-left: 15px;"><span id="pedicon" style="background-color:#d4007e;margin-right:25px;"></span>Pedestrian Count</div><div><b>The Circuit</b></div><div><span2 style="background-color:#8dc63f"></span2>Existing</div><div><span2 style="background-color:#fdae61"></span2>In Progress</div><div><span2 style="background-color:#008192"></span2>Planned</div>';
                 return div;
                 };
 
@@ -229,8 +229,24 @@
                     document.getElementById('infosidebar').innerHTML = content;
                 };
 
-
-                map.data = L.featureGroup().bindTooltip(function (layer) { return layer.feature.properties.ROAD }, {direction: 'top'}).on('click', function (e) {
+                map.data = L.markerClusterGroup({
+                    chunkedLoading:true,
+                    iconCreateFunction: function(cluster) {
+                        var sum = cluster.getAllChildMarkers().reduce(function(total, current) {
+                            return total + parseInt(current.feature.properties.AADX)
+                        }, 0)
+                        var imax = 40000
+                        var imin = 1
+                        var fmax = 80
+                        var fmin = 12
+                        var children = (sum - imin) * (fmax - fmin) / (imax - imin) + fmin
+                        console.log(sum, children)
+                        return L.divIcon({className: 'opaque-circle-marker'})
+                    },
+                    maxClusterRadius: function(zoom) {
+                        return zoom*1.2
+                    }
+                }).bindTooltip(function (layer) { return layer.feature.properties.ROAD }, {direction: 'top'}).on('click', function (e) {
 
                     var matches = {},
                         result = [],
@@ -297,7 +313,7 @@
                                 this.feature.properties.TEXTCOLOR =  this.feature.properties.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
                                 this.feature.properties.MONTH = monthString
                                 this.feature.properties.ICONSTYLE = (this.feature.properties.TYPE.match(/^Bicycle/) ? '0px': '10px')
-                                this.feature.properties.GSTVWIDTH = (this.feature.properties.TYPE.match(/^Bicycle/) ? '540': '540')
+                                this.feature.properties.GSTVWIDTH = '540'
                                 result.push(this.feature.properties)
                             })
                             var sorted = result.sort(function (a,b) { return new Date(b.SETDATE).getTime() - new Date(a.SETDATE).getTime() }),
@@ -315,10 +331,26 @@
                         
                         })})
                     }
-                }).addTo(map)
+                })
 
+               window.heatmap = []
+               map.heat = L.heatLayer([], {
+                    gradient: {0: '#2e5c95', 1: '#d4007e'}
+                }).addTo(map)
                var peddata = $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=bike', parseData)
                var bikedata = $.getJSON('https://www.dvrpc.org/webmaps/pedbikecounts/data.aspx?type=ped', parseData)
+
+               map.on('zoomend', function(e) {
+                console.log('map zoomed', map.getZoom())
+                if (map.getZoom() < 25) {
+                    map.data.addTo(map)
+                    map.heat.removeFrom(map)
+                }
+                else {
+                    map.data.removeFrom(map)
+                    map.heat.addTo(map)
+                }
+               })
 
                 $(document).on('click', '#zoomToRegion', function (e) {
                     map.fitBounds(map.data.getBounds())
@@ -348,12 +380,13 @@
             })
             
             function symbolize(feature) {
-                var scale = feature.attributes.TYPE.match(/^Bicycle/) ?
+                var isBike = feature.attributes.TYPE.match(/^Bicycle/)
+                var scale = isBike ?
                         (feature.attributes.AADB > 151 ? 9 : feature.attributes.AADB > 47 ? 7 : feature.attributes.AADB > -5 ? 5 : 3) :
                         (feature.attributes.AADP > 1828 ? 9 : feature.attributes.AADP > 718 ? 7 : feature.attributes.AADP > 271 ? 5 : 3),
             //crp        color = feature.attributes.TYPE.match(/^Bicycle/) ? '#FF8800' : '#C500FF'
-                    color = feature.attributes.TYPE.match(/^Bicycle/) ? '#2e5c95' : '#d4007e'
-                    size = feature.attributes.TYPE.match(/^Bicycle/) ? '6' : '8'
+                    color = isBike ? '#2e5c95' : '#d4007e'
+                    size = isBike ? 6 : 8
                 return {
                     stroke: false,
                     fillColor: color,
@@ -379,9 +412,13 @@
                     if (!isNaN(parseInt(feature.attributes.AADB) || parseInt(feature.attributes.AADP))) {
                      //   map.data.addLayer(m).bindPopup(feature.attributes.ROAD)
                         map.data.addLayer(m)
+                        heatmap.push([feature.geometry.y, feature.geometry.x, (parseInt(feature.attributes.AADB) || parseInt(feature.attributes.AADP))/200])
+                        console.log((parseInt(feature.attributes.AADB) || parseInt(feature.attributes.AADP))/200)
                     }
                 // crp    if (!feature.attributes.AADX.length || isNaN(parseInt(feature.attributes.AADX))) console.log(feature.attributes)   
                      })
+                console.log(heatmap.length)
+                map.heat.setLatLngs(heatmap)
            //     map.fitBounds(map.data.getBounds())
             }
             
